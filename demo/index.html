@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>my-audio-player demo</title>
+
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+
+    <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+    <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+    
+
+    <link rel="import" href="../my-audio-player.html">
+
+    <style is="custom-style" include="demo-pages-shared-styles">
+    </style>
+  </head>
+  <body>
+    <div class="vertical-section-container centered">
+      <h3>Basic my-audio-player demo</h3>
+      <demo-snippet>
+        <template>
+          <my-audio-player title="Podcast #17" src="../YouAllAreKillingIt.wav">></my-audio-player>
+        </template>
+      </demo-snippet>
+    </div>
+     <my-audio-player title="Podcast #18" src="../YouAllAreKillingIt.wav">></my-audio-player>
+
+     <section style="margin-top:10px">
+      <my-audio-player title="Podcast #19" src="../YouAllAreKillingIt.wav">></my-audio-player>
+     </section>
+  </body>
+</html>

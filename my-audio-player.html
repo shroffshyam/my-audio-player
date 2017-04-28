@@ -1,0 +1,185 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../iron-icon/iron-icon.html">
+<link rel="import" href="../iron-icons/av-icons.html">
+<!--<link rel="import" href="../polymer/lib/elements/dom-if.html">-->
+<!--<link rel="import" href="../polymer/lib/elements/dom-repeat.html">-->
+
+<!--
+`my-audio-player`
+custom audio player using polymer lib
+
+@demo demo/index.html
+-->
+
+<dom-module id="my-audio-player">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+       #left,
+        #right {
+          height: 50px;
+          width: 50px;
+          position: relative;
+        }
+
+        #left {
+          background-color: blueviolet;
+        } 
+
+        /* Helpers */
+
+        .layout-horizontal {
+          display: flex;
+          -ms-flex-direction: row;
+          -webkit-flex-direction: row;
+          flex-direction: row;
+        }
+
+        .flex {
+          -ms-flex: 1;
+          -webkit-flex: 1;
+          flex: 1;
+        }
+
+        .self-start {
+          -ms-align-self: flex-start;
+          -webkit-align-self: flex-start;
+          align-self: flex-start;
+        }
+
+        .self-end {
+          -ms-align-self: flex-end;
+          -webkit-align-self: flex-end;
+          align-self: flex-end;
+        }
+        #title {
+        position: absolute; 
+        color: blueviolet; 
+        font-size: 15px; 
+        text-align: center; 
+        line-height: 50px; 
+        z-index: 2; 
+      }
+
+      #wrapper {
+        position: relative; 
+        box-shadow: 0 1px 2px rgba(0, 0, 0, .3); 
+        cursor: pointer; 
+      }
+
+      .fit { 
+        position: absolute; 
+        margin: auto; 
+        top: 0; 
+        right: 0; 
+        bottom: 0; 
+        left: 0; 
+      }
+      #duration {
+        text-align: center;
+        line-height: 50px;
+        font-size: 11px;
+        color: blueviolet;
+      }
+      #play,
+      #pause {
+        color: #fff; 
+      }
+    </style>
+    
+    <div id="wrapper" class="layout-horizontal" on-click="playPause">
+      <div id="left" class="self-start">
+        <!-- Icons -->
+        <iron-icon id="play" 
+                      class="fit" 
+                      icon="av:play-circle-outline" 
+                      hidden$="{{ isPlaying }}"></iron-icon>
+
+        <iron-icon id="pause" 
+                      class="fit" 
+                      icon="av:pause-circle-outline" 
+                      hidden$="{{ !isPlaying }}"></iron-icon>
+      </div>
+      <div class="flex">
+        <div id="title" class="fit">[[title]]</div>
+        <audio id="audio" src$="[[src]]"></audio>
+      </div>
+      <div id="right" class="self-end">
+        <div id="duration" class="fit">
+          <span class="fit">[[ _convertSecToMin(duration) ]] </span>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <script>
+    /** @polymerElement */
+    class MyAudioPlayer extends Polymer.Element {
+      // Stamp template from this dom-module into element's shadow DOM:
+      static get is() { return 'my-audio-player'; }
+      
+        // Define property/attribute API:
+      static get properties() {
+        return {
+          title: String,
+          src: String,
+          duration:{
+            type: Number,
+            value: 0
+          },
+          isPlaying: { 
+            type: Boolean, 
+            value: false 
+          } 
+        };
+      }
+
+      constructor(){
+        super();
+        console.log("constructor is called");
+      }
+
+      ready(){
+        super.ready();
+        console.log("Ready is called");
+
+        this.$.audio.addEventListener('loadedmetadata', (e)=> {this._onCanPlay(e)} );
+      }
+
+      playPause(e) { 
+        e.preventDefault(); 
+
+        var player = this; 
+
+        if ( player.$.audio.paused ) { 
+          player.$.audio.play(); 
+          player.isPlaying = true;
+        } else { 
+          player.$.audio.pause(); 
+          player.isPlaying = false;
+        } 
+      } 
+
+      _onCanPlay(e) { 
+        var player = this; 
+        player.duration = player.$.audio.duration;
+      }
+
+      _convertSecToMin(seconds){
+        if (seconds === 0) {
+          return '';
+        }
+        var minutes = Math.floor(seconds / 60);
+        var secondsToCalc = Math.floor(seconds % 60) + '';
+        return minutes + ':' + (secondsToCalc.length < 2 ? '0' + secondsToCalc : secondsToCalc);
+      }
+
+
+    }
+
+    // Register custom element class with browser
+    window.customElements.define(MyAudioPlayer.is, MyAudioPlayer);
+  </script>
+</dom-module>
